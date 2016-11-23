@@ -1,7 +1,7 @@
 # android-location-circle
 定位圈动画
 
-本工程为基于高德地图Android SDK进行封装，用marker来实现同时显示多个infowindow的效果。
+本工程为基于高德地图Android SDK进行封装，实现定位精度圈向外缩放的动画效果。
 ## 前述 ##
 - [高德官网申请Key](http://lbs.amap.com/dev/#/).
 - 阅读[参考手册](http://a.amap.com/lbs/static/unzip/Android_Map_Doc/index.html).
