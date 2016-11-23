@@ -8,7 +8,7 @@
 - 工程基于Android 定位SDK和3D地图SDK实现
 
 ##效果展示##
-![Screenshot]( https://github.com/amap-demo/android-location-circle/raw/master/apk/picture.png )
+![Screenshot]( https://github.com/amap-demo/android-location-circle/raw/master/apk/picture.jpg )
 
 ## 扫一扫安装##
 ![Screenshot]( https://github.com/amap-demo/android-location-circle/raw/master/apk/1479866100.png )
