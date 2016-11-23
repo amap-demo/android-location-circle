@@ -3,7 +3,6 @@ package amap.android_location_circle;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -27,10 +27,7 @@ import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
     private Marker locMarker;
     private Circle ac;
     private Circle c;
-    private Handler handler = new Handler();
     private long start;
     private final Interpolator interpolator = new CycleInterpolator(1);
+    private final Interpolator interpolator1 = new LinearInterpolator();
     private TimerTask mTimerTask;
     private Timer mTimer = new Timer();
 
@@ -141,28 +138,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
 
     @Override
     public void onMapClick(LatLng latLng) {
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
-        }
-        float accuracy = (float) Math.random()*30;
-        if (locMarker == null) {
-            locMarker = addMarker(latLng);
-            ac = aMap.addCircle(new CircleOptions().center(latLng)
-                    .fillColor(Color.argb(100, 255, 218, 185)).radius(accuracy)
-                    .strokeColor(Color.argb(255, 255, 228, 185)).strokeWidth(5));
-            c = aMap.addCircle(new CircleOptions().center(latLng)
-                    .fillColor(Color.argb(70, 255, 218, 185))
-                    .radius(accuracy).strokeColor(Color.argb(255, 255, 228, 185))
-                    .strokeWidth(5));
-        } else {
-            locMarker.setPosition(latLng);
-            ac.setCenter(latLng);
-            ac.setRadius(accuracy);
-            c.setCenter(latLng);
-            c.setRadius(accuracy);
-        }
-            Scalecircle(c);
+
     }
 
     @Override
@@ -234,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
             c = aMap.addCircle(new CircleOptions().center(mylocation)
                     .fillColor(Color.argb(70, 255, 218, 185))
                     .radius(accuracy).strokeColor(Color.argb(255, 255, 228, 185))
-                    .strokeWidth(5));
+                    .strokeWidth(0));
         } else {
             locMarker.setPosition(mylocation);
             ac.setCenter(mylocation);
@@ -250,17 +226,6 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
         start = SystemClock.uptimeMillis();
         mTimerTask = new circleTask(circle);
         mTimer.schedule(mTimerTask, 0, 30);
-        //        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                long elapsed = SystemClock.uptimeMillis() - start;
-//                float input = (float)elapsed / duration;
-//                float t = interpolator.getInterpolation((float)(input-0.25));//return (float)(Math.sin(2 * mCycles * Math.PI * input))
-//                double r1 = (t + 2) * r;
-//                circle.setRadius(r1);
-//                    handler.postDelayed(this, 20);
-//            }
-//        });
     }
 
 
@@ -268,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
     private  class circleTask extends TimerTask {
         private double r;
         private Circle circle;
-        final long duration = 10000;
+        final long duration = 1000;
 
         public circleTask(Circle circle){
             this.circle = circle;
@@ -279,9 +244,16 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
             try {
                 long elapsed = SystemClock.uptimeMillis() - start;
                 float input = (float)elapsed / duration;
-                float t = interpolator.getInterpolation((float)(input-0.25));//return (float)(Math.sin(2 * mCycles * Math.PI * input))
-                double r1 = (t + 2) * r;
+//                外圈循环缩放
+//                float t = interpolator.getInterpolation((float)(input-0.25));//return (float)(Math.sin(2 * mCycles * Math.PI * input))
+//                double r1 = (t + 2) * r;
+//                外圈放大后消失
+                float t = interpolator1.getInterpolation(input);
+                double r1 = (t + 1) * r;
                 circle.setRadius(r1);
+                if (input > 2){
+                    start = SystemClock.uptimeMillis();
+                }
             } catch (Throwable e) {
                e.printStackTrace();
             }
