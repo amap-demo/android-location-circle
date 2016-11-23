@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
 
     public void Scalecircle(final Circle circle) {
         start = SystemClock.uptimeMillis();
-        mTimerTask = new circleTask(circle);
+        mTimerTask = new circleTask(circle, 1000);
         mTimer.schedule(mTimerTask, 0, 30);
     }
 
@@ -233,11 +233,14 @@ public class MainActivity extends AppCompatActivity implements AMap.OnMapLoadedL
     private  class circleTask extends TimerTask {
         private double r;
         private Circle circle;
-        final long duration = 1000;
+        private long duration = 1000;
 
-        public circleTask(Circle circle){
+        public circleTask(Circle circle, long rate){
             this.circle = circle;
             this.r = circle.getRadius();
+            if (rate > 0 ) {
+                this.duration = rate;
+            }
         }
         @Override
         public void run() {
