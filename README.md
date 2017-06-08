@@ -14,7 +14,7 @@
 ![Screenshot]( https://github.com/amap-demo/android-location-circle/raw/master/apk/1479866100.png )
 
 ## 使用方法 ##
-###1:配置搭建AndroidSDK工程###
+### 1:配置搭建AndroidSDK工程 ###
 - [Android Studio工程搭建方法](http://lbs.amap.com/api/android-sdk/guide/creat-project/android-studio-creat-project/#add-jars).
 - [通过maven库引入SDK方法](http://lbsbbs.amap.com/forum.php?mod=viewthread&tid=18786).
 
